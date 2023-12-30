@@ -1,0 +1,12 @@
+nav{
+    display: flex;
+    justify-content: center;background-color: black;
+}
+nav div a{
+    text-decoration: none;
+    color: white;
+}
+nav div{
+    margin-left: 3rem;
+    margin-right: 3rem;
+}

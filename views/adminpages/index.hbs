@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasta Reddit</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    {{>navbar}}
+    <h1 style="text-align: center;">Welcome to Our Website</h1>
+    {{#each blogs}}
+    <div>
+        <h4>{{this.title}}</h4>
+        <img src={{this.imgUrl}} alt={{title}}>
+        <p>{{caption}}</p>
+        <div style="display: flex;flex-direction:row; justify-content: space-between;">
+            <a href="/updateblog/{{this.id}}">
+            <button>Update</button>
+            </a>
+            <a href="/deleteblog/{{this.id}}">
+                <button>delete</button>
+            </a>
+        </div>
+    </div>
+    {{/each}}
+</body>
+
+</html>
