@@ -11,7 +11,12 @@ module.exports.Login = async (req,res) => {
         else{
             req.session.user = user;
             req.session.isLoggedIn=true;
-            res.redirect('/admin');
+            if (user.Admin) {
+                res.redirect('/admin');
+            }
+            else{
+                res.redirect('/');
+            }
         }
     }
     else{
