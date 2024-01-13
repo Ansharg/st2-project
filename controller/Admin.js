@@ -65,7 +65,7 @@ module.exports.Register = async (req, res) => {
                 userId: newUser._id,
                 token: crypto.randomBytes(32).toString("hex"),
             }).save();
-            const message = `http://localhost:3000/user/verify/${newUser.id}/${token.token}`;
+            const message = `https://st2-project.vercel.app/user/verify/${newUser.id}/${token.token}`;
             console.log(message);
             await SendEmail.SendEmail(newUser.Username, "Verify Email", message);
             res.send("verify your email by clicking link send to your email");
