@@ -9,12 +9,12 @@ module.exports.SendEmail = async (email, subject, text) => {
             // secure: true,
             auth: {
                 user: "anshgarg94161@gmail.com",
-                pass: "W3ithzkun9",
+                pass: "zeaf hanl ffjm ukpo",
             },
             authMethod: "PLAIN"
         });
         await transporter.sendMail({
-            from: process.env.USER,
+            from: "anshgarg94161@gmail.com",
             to: email,
             subject: subject,
             text: text,

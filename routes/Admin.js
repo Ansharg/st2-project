@@ -23,7 +23,7 @@ router.get("/verify/:id/:token",async(req,res)=>{
     user.verify=true;
     await user.save();
     await Token.findByIdAndDelete(token._id);
-    res.redirect("/api/user");
+    res.send("Email verified successfully");
 })
 
 module.exports = router;

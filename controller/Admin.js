@@ -64,7 +64,7 @@ module.exports.Register = async (req,res) => {
               }).save();
               const message = `http://localhost:3000/user/verify/${newUser.id}/${token.token}`;
               console.log(message);
-              await SendEmail.SendEmail(newUser.email, "Verify Email", message);
+              await SendEmail.SendEmail(newUser.Username, "Verify Email", message);
               res.send("verify your email by clicking link send to your email");
         });
     }
