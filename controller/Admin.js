@@ -1,10 +1,15 @@
 const User = require('../model/User');
 const Blog = require('../model/Blog');
+const Token = require('../model/Token');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const crypto=require("crypto");
+const SendEmail = require("../utils/util");
 
 module.exports.Login = async (req,res) => {
     const {Username,Password} = req.body;
     let user = await User.findOne({Username: Username});
-    if(user){
+    if(user.is_verify){
         if (user.Password != Password) {
             res.send("Invalid Password");
         }
@@ -26,7 +31,7 @@ module.exports.Login = async (req,res) => {
 
 module.exports.LoginPage = (req,res) => {
     if (req.session.isLoggedIn) {
-        res.render('profile.hbs',{user: req.session.user})
+        res.redirect('/profile');
     }
     else{
         res.render('login.hbs');
@@ -43,15 +48,25 @@ module.exports.RegisterPage = (req,res) => {
 }
 
 module.exports.Register = async (req,res) => {
-    const {Username,Password,Admin} = req.body;
+    const {Username,Password} = req.body;
     const checkuser = await User.findOne({Username:Username});
     if (checkuser) {
         res.send("User already registered");
     }
     else{
-        const newuser = new User({Username:Username,Password:Password,Admin:Admin});
-        await newuser.save();
-        res.redirect('/login');
+        bcrypt.hash(Password, saltRounds).then(async function(hash) {
+            // Store hash in your password DB.
+            const newUser=new User({Username,Password:hash});
+            await newUser.save();
+            let token = await new Token({
+                userId: newUser._id,
+                token: crypto.randomBytes(32).toString("hex"),
+              }).save();
+              const message = `http://localhost:3000/user/verify/${newUser.id}/${token.token}`;
+              console.log(message);
+              await SendEmail.SendEmail(newUser.email, "Verify Email", message);
+              res.send("verify your email by clicking link send to your email");
+        });
     }
 }
 
@@ -84,11 +99,27 @@ module.exports.CategoryPage = (req,res) => {
 module.exports.Category = async(req,res) => {
     const {category} = req.body;
     if (req.session.isLoggedIn) {
-        let blogs = await Blog.find({category:category});
+        let blogs = await Blog.find({category:category,is_verify:true});
         res.render('category.hbs',{blogs:blogs,user:req.session.user});
     }
     else{
-        let blogs = await Blog.find({category:category});
+        let blogs = await Blog.find({category:category,is_verify:true});
         res.render('category.hbs',{blogs:blogs,category:category});
     }
+}
+
+module.exports.ProfilePage = async (req,res) => {
+    if(req.session.isLoggedIn) {
+        const userblogs = await Blog.find({user_id:req.session.user._id});
+        res.render('profile.hbs',{user: req.session.user,blogs:userblogs});
+    }
+    else{
+        res.redirect('/');
+    }
+}
+
+module.exports.Admin = async (req, res) => {
+    const {id} = req.params;
+    const {is_verify} = req.query;
+    await Blog.findByIdAndUpdate(id,{is_verify:is_verify});
 }

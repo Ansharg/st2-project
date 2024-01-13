@@ -1,7 +1,8 @@
 const Blog = require('../model/Blog');
+const User = require('../model/User');
 
 module.exports.DisplayAllBlogs = async (req,res) => {
-    let blogs  = await Blog.find({});
+    let blogs  = await Blog.find({is_verify:true});
     if (req.session.isLoggedIn) {
         res.render('landingpage.hbs',{blogs:blogs,user: req.session.user});
     }
@@ -16,8 +17,13 @@ module.exports.AddBlogPage = (req,res) => {
 
 module.exports.AddBlog = async (req,res) => {
     const {imgUrl,title, caption,category} = req.body;
-    const newblog = new Blog({imgUrl:imgUrl,title:title,caption:caption,category:category});
+    const newblog = new Blog({imgUrl:imgUrl,title:title,caption:caption,category:category,user_id:req.session.user._id});
     await newblog.save();
+    let user = await User.findById(req.session.user._id);
+    console.log(newblog._id);
+    user.Blogs.push(newblog._id);
+    console.log(user);
+    await user.save();
     res.redirect("/")
 }
 
