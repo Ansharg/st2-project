@@ -4,10 +4,10 @@ const User = require('../model/User');
 module.exports.DisplayAllBlogs = async (req,res) => {
     let blogs  = await Blog.find({is_verify:true});
     if (req.session.isLoggedIn) {
-        res.render('landingpage.hbs',{blogs:blogs,user: req.session.user});
+        res.render('landingpage',{blogs:blogs,user: req.session.user});
     }
     else{
-        res.render('landingpage.hbs',{blogs:blogs});
+        res.render('landingpage',{blogs:blogs});
     }
 }
 

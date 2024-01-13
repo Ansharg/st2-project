@@ -1,11 +1,10 @@
 const User = require('../model/User');
 const Blog = require('../model/Blog');
 const Token = require('../model/Token');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const crypto = require("crypto");
 const SendEmail = require("../utils/util");
-const { Result } = require('postcss');
 
 module.exports.Login = async (req, res) => {
     const { Username, Password } = req.body;
