@@ -33,7 +33,7 @@ function checkloggedin(req,res,next){
 app.use("/",routeradmin);
 app.use("/",checkloggedin,routerblog);
 
-mongoose.connect("mongodb://localhost:27017/blogsapp").then(()=>{
+mongoose.connect("mongodb+srv://ansh:vez0X9TN6aA4DnI9@cluster0.g01aulu.mongodb.net/blogsapp?retryWrites=true&w=majority").then(()=>{
     app.listen(3000,(req,res)=>{
         console.log("Server is running at port 3000");
     })

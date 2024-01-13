@@ -1,4 +1,6 @@
 const express = require('express');
+const User = require('../model/User');
+const Token = require('../model/Token');
 const router = express.Router();
 const {Login,LoginPage,RegisterPage,Register,AdminPage,Logout,CategoryPage,Category,ProfilePage,Admin} = require('../controller/Admin');
 
@@ -12,7 +14,7 @@ router.post('/admin/:id',Admin);
 router.get('/category',CategoryPage);
 router.post('/category',Category);
 router.get('/profile',ProfilePage);
-router.get("/verify/:id/:token",async(req,res)=>{
+router.get("/user/verify/:id/:token",async(req,res)=>{
     const {id}=req.params;
     let user= await User.findOne({_id:id});
     if(!user) return res.status(400).send("Invalid link");
